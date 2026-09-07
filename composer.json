@@ -1,5 +1,13 @@
 {
     "name": "portfolio/it-asset-manager",
+    "description": "Outil interne de gestion d'inventaire IT en PHP MVC",
+    "type": "project",
+    "config": {
+        "platform": {
+            "php": "8.3.33"
+        },
+        "platform-check": false
+    },
     "autoload": {
         "psr-4": {
             "App\\": "src/",
