@@ -84,4 +84,37 @@ class Asset
         $stmt = $db->prepare("DELETE FROM assets WHERE id = :id");
         return $stmt->execute(['id' => $id]);
     }
+
+    /**
+     * -@- Récupère le nombre d'équipements groupés par statut
+     */
+    public static function getStatsByStatus(): array
+    {
+        $db = Database::getInstance();
+        $stmt = $db->query("SELECT status, COUNT(*) as count FROM assets GROUP BY status");
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * -@- Récupère le nombre d'équipements groupés par marque
+     */
+    public static function getStatsByBrand(): array
+    {
+        $db = Database::getInstance();
+        $stmt = $db->query("SELECT brand, COUNT(*) as count FROM assets GROUP BY brand");
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * -@- Récupère le nombre total d'équipements
+     */
+    public static function getTotalCount(): int
+    {
+        $db = Database::getInstance();
+        $stmt = $db->query("SELECT COUNT(*) as total FROM assets");
+        $result = $stmt->fetch();
+        return (int)($result['total'] ?? 0);
+
+    }
+
 }

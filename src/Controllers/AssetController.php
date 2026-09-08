@@ -104,13 +104,13 @@ class AssetController
         }
 
         // -@- Contenu à encoder dans le QR Code (ex: URL verss la fiche ou identifiant unique.)
-        // $qrData = "ASSET-ID: {$asset['id']} | Serial: {$asset['serial_number']} | Model: {$asset['model']}";
+        $qrData = "ASSET-ID: {$asset['id']} | Serial: {$asset['serial_number']} | Model: {$asset['model']}";
         
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-        $host = $_SERVER['HTTP_HOST'];
-        $qrData = "{$protocol}://{$host}/itAssetManager/public/index.php?action=show-asset&id={$asset['id']}";
+        // $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        // $host = $_SERVER['HTTP_HOST'];
+        // $qrData = "{$protocol}://{$host}/itAssetManager/public/index.php?action=show-asset&id={$asset['id']}";
 
-        // -@- Génération du QR Code via Endroid QR Code
+        // -@- Génération du QR Code via Endroid QR Code.
         $writer =  new PngWriter;
         $qrCode = new QrCode(
             data: $qrData,

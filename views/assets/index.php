@@ -1,11 +1,11 @@
 <?php include __DIR__ . '/../layout/header.php'; ?>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Liste de l'inventaire</h2>
+<div class="d-flex justify-content-between align-items-center mb-3 m-2">
+    <h2></h2>
     <a href="index.php?action=create-asset" class="btn btn-primary">+ Ajouter un matériel</a>
 </div>
 
-<div class="card shadow-sm">
+<div class="card shadow-sm m-2">
     <div class="card-body p-0">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-dark">

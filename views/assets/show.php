@@ -30,15 +30,23 @@ include __DIR__ . '/../layout/header.php';
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3 no-print">
-        <a href="index.php?action=assets" class="btn btn-secondary">&larr; Retour à l'inventaire</a>
+        <?php if (isset($_SESSION['user'])): ?>
+            <a href="index.php?action=assets" class="btn btn-secondary">&larr; Retour à l'inventaire</a>
+        <?php else: ?>
+            <span></span> <!-- Espaceur si non connecté -->
+        <?php endif; ?>
+
         <button onclick="window.print()" class="btn btn-primary">
             🖨️ Imprimer l'étiquette QR Code
         </button>
     </div>
 
     <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Détails du Matériel #<?= htmlspecialchars($asset['id']) ?></h5>
+            <?php if (isset($_SESSION['user'])): ?>
+                <a href="index.php?action=edit-asset&id=<?= $asset['id'] ?>" class="btn btn-sm btn-warning no-print">✏️ Modifier</a>
+            <?php endif; ?>
         </div>
         <div class="card-body">
             <div class="row">

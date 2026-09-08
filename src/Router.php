@@ -3,71 +3,56 @@
 namespace App;
 
 use App\Controllers\AssetController;
+use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 
 class Router
 {
-    public function dispatch(): void
-    {
-        $action = $_GET['action'] ?? 'assets';
-        $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
+   private array $routes = [];
 
-        $assetController = new AssetController();
+   public function __construct()
+   {
+        $this->routes = [
+            // Routes publiques
+            'login'         => [AuthController::class, 'showLogin'],
+            'login-submit'  => [AuthController::class, 'login'],
+            'show-asset'    => [AssetController::class, 'show'],
 
-        switch ($action) {
-            case 'assets':
-                $assetController->index();
-                break;
+            // Routes Protégés (connexion requise)
+            'logout'        => [AuthController::class, 'logout'],
+            'dashboard'     => [DashboardController::class, 'index'],
+            'assets'        => [AssetController::class, 'index'],
+            'create-asset'  => [AssetController::class, 'create'],
+            'store-asset'   => [AssetController::class, 'store'],
+            'edit-asset'    => [AssetController::class, 'edit'],
+            'update-asset'  => [AssetController::class, 'update'],
+            'delete-asset'  => [AssetController::class, 'delete']
+        ];
+   }
 
-            case 'create-asset':
-                $assetController->create();
-                break;
+   public function dispatch(string $action): void
+   {
+    $publicRoutes = ['login', 'login-submit', 'show-asset'];
 
-            case 'store-asset':
-                $assetController->store();
-                break;
-
-            case 'show-asset':
-                if ($id) {
-                    $assetController->show($id);
-                } else {
-                    header('Location: index.php?action=assets');
-                }
-                break;
-
-            case 'edit-asset':
-                if ($id) {
-                    $assetController->edit($id);
-                } else {
-                    header('Location: index.php?action=assets');
-                }
-                break;
-
-            case 'update-asset':
-                if ($id) {
-                    $assetController->update($id);
-                } else {
-                    header('Location: index.php?action=assets');
-                }
-                break;
-
-            case 'delete-asset':
-                if ($id) {
-                    $assetController->delete($id);
-                } else {
-                    header('Location: index.php?action=assets');
-                }
-                break;
-
-            // case 'dashboard':
-            //     $dashboardController = new DashboardController();
-            //     $dashboardController->index();
-            //     break;
-
-            default:
-                http_response_code(404);
-                echo "<h1 style='text-align:center; margin-top:50px;'>404 — Page non trouvée</h1>";
-                break;
-        }
+    if (!in_array($action, $publicRoutes) && !isset($_SESSION['user'])) {
+        header(('Location:index.php?action=login'));
+        exit;
     }
+
+    if (array_key_exists($action, $this->routes)) {
+        [$controllerClass, $method] = $this->routes[$action];
+        $controller = new $controllerClass();
+        
+        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+        if ($id !== false && $id !== null) {
+            $controller->$method($id);
+        } else {
+            $controller->$method();
+        }
+    } else {
+        header("HTTP/1.0 404 Not Found");
+        echo "<h1>404 — Page non trouvée</h1>";
+    }
+   }
 }
