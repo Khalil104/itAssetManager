@@ -35,18 +35,20 @@ class Asset
     public static function create(array $data): bool
     {
         $db = Database::getInstance();
+        
         $sql = "INSERT INTO assets (brand, model, serial_number, assigned_user, purchase_date, status)
                 VALUES (:brand, :model, :serial_number, :assigned_user, :purchase_date, :status)";
     
-    $stmt = $db->prepare($sql);
-    return $stmt->execute([
-        'brand'         => $data['brand'],
-        'model'         => $data['model'],
-        'assigned_user' => $data['assigned_user'],
-        'serial_number' => $data['serial_number'],
-        'purchase_date' => !empty($data['purchase_date']) ? $data['purchase_date']  :null,
-        'status'        => $data['status']
-    ]);
+        $stmt = $db->prepare($sql);
+
+        return $stmt->execute([
+            'brand'         => $data['brand'],
+            'model'         => $data['model'],
+            'serial_number' => $data['serial_number'],
+            'assigned_user' => $data['assigned_user'],
+            'purchase_date' => !empty($data['purchase_date']) ? $data['purchase_date'] : null,
+            'status'        => $data['status']
+        ]);
     }
 
     /**

@@ -38,6 +38,7 @@
                                     <span class="badge bg-secondary"><?= htmlspecialchars($asset['status']) ?></span>
                                 </td>
                                 <td class="text-end">
+                                    <a href="index.php?action=show-asset&id=<?= $asset['id'] ?>" class="btn btn-sm btn-outline-info">QR Code</a>
                                     <a href="index.php?action=edit-asset&id=<?= $asset['id'] ?>" class="btn btn-sm btn-outline-primary">Editer</a>
                                     <a href="index.php?action=delete-asset&id=<?= $asset['id']?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Confirmer la suppression de cet équipement ?')">Supprimer</a>
                                 </td>

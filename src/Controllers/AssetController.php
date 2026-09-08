@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\Asset;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 
 class AssetController
 {
@@ -87,5 +89,41 @@ class AssetController
         Asset::delete($id);
         header('Location: index.php?action=assets');
         exit;
+    }
+
+    /**
+     * -@- Afficher le code QR Code du matériel
+     */
+    public function show(int $id): void
+    {
+        $asset = Asset::findById($id);
+
+        if (!$asset) {
+            header('Location: index.php?action=assets');
+            exit;
+        }
+
+        // -@- Contenu à encoder dans le QR Code (ex: URL verss la fiche ou identifiant unique.)
+        // $qrData = "ASSET-ID: {$asset['id']} | Serial: {$asset['serial_number']} | Model: {$asset['model']}";
+        
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'];
+        $qrData = "{$protocol}://{$host}/itAssetManager/public/index.php?action=show-asset&id={$asset['id']}";
+
+        // -@- Génération du QR Code via Endroid QR Code
+        $writer =  new PngWriter;
+        $qrCode = new QrCode(
+            data: $qrData,
+            size: 200,
+            margin: 10
+        );
+
+        $result = $writer->write($qrCode);
+
+        // Conversion en Data URI pour l'injecter directement dans la balise <img>
+        $qrCodeUri = $result->getDataUri();
+
+        // Ingestion de la vue 
+        require_once __DIR__ . '/../../views/assets/show.php';
     }
 }
